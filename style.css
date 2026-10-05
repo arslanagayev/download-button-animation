@@ -1,0 +1,124 @@
+/* Download button: pill -> progress ring -> check -> "Downloaded". Sizes are set once here. */
+.dl {
+  --w: 320px;          /* pill width */
+  --h: 80px;           /* pill height = collapsed circle */
+  --ring: 120px;       /* progress ring box */
+  --circ: 339.29;      /* 2 * PI * 54, the ring's circumference in SVG units */
+  position: relative;
+  width: min(560px, 100%);
+  display: grid;
+  justify-items: center;
+}
+
+/* The pill itself; JS animates its width, it stays centred because the grid centres it. */
+.dl-btn {
+  position: relative;
+  width: var(--w);
+  height: var(--h);
+  padding: 0;
+  border: 0;
+  border-radius: calc(var(--h) / 2);
+  background: var(--ink);
+  color: #fff;
+  font: 600 22px/1 var(--font);
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: background 0.25s ease-out;
+}
+
+.dl-btn:focus-visible { outline: 2px solid var(--orange); outline-offset: 6px; }
+
+.dl-label { position: absolute; left: 34px; top: 50%; translate: 0 -50%; white-space: nowrap; }
+
+/* Anchored to the right edge, so it slides to the centre on its own as the pill collapses. */
+.dl-icon {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--orange);
+  transition: opacity 0.15s, scale 0.15s ease-in;
+}
+
+.dl-icon svg { width: 28px; height: 28px; fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+
+.dl-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--ring);
+  height: var(--ring);
+  translate: -50% -50%;
+  rotate: -90deg;          /* start drawing at 12 o'clock */
+  overflow: visible;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s, scale 0.35s ease-out;
+}
+
+.dl-ring circle { fill: none; stroke-width: 5; }
+.dl-ring-track { stroke: var(--rule); }
+.dl-ring-bar { stroke: var(--orange); stroke-linecap: round; stroke-dasharray: var(--circ); stroke-dashoffset: var(--circ); }
+
+.dl-check {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 36px;
+  height: 36px;
+  translate: -50% -50%;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;   /* hidden until drawn */
+}
+
+.dl-done { position: absolute; left: 50%; top: 50%; translate: -50% -50%; white-space: nowrap; opacity: 0; }
+
+/* Status line: file info swaps for the saved path */
+.dl-status { position: relative; height: 22px; margin: 22px 0 0; width: 100%; text-align: center; font: 500 17px/22px var(--font); }
+.dl-status span { position: absolute; inset: 0; transition: opacity 0.25s, translate 0.25s; }
+.dl-file { color: var(--muted); }
+.dl-saved { color: var(--orange); font-weight: 600; opacity: 0; translate: 0 8px; }
+
+/* Giant counter: faint ink while idle, orange while downloading */
+.dl-count {
+  margin: 26px 0 0;
+  display: flex;
+  align-items: flex-start;
+  font: 400 168px/0.8 var(--display);
+  letter-spacing: -0.06em;
+  color: rgb(17 17 17 / 0.08);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.3s;
+}
+
+.dl-num { display: inline-block; min-width: 2.1em; text-align: right; }
+.dl-pct { font-size: 0.4em; letter-spacing: 0; margin: 0.12em 0 0 0.12em; }
+
+/* Progress rule along the bottom */
+.dl-line { width: 100%; height: 2px; margin-top: 30px; background: var(--rule); }
+.dl-line span { display: block; height: 4px; margin-top: -1px; background: var(--orange); transform-origin: left; scale: var(--p, 0) 1; }
+
+/* States */
+.dl[data-state="downloading"] .dl-ring { opacity: 1; }
+.dl[data-state="downloading"] .dl-icon svg { animation: bob 0.6s ease-in-out infinite alternate; }
+.dl:is([data-state="downloading"], [data-state="done"]) .dl-count { color: var(--orange); }
+
+.dl[data-state="done"] .dl-btn { background: var(--orange); }
+.dl[data-state="done"] .dl-icon { opacity: 0; scale: 0.6; }
+.dl[data-state="done"] .dl-ring { opacity: 0; scale: 1.18; }
+.dl[data-state="done"] .dl-file { opacity: 0; }
+.dl[data-state="done"] .dl-saved { opacity: 1; translate: 0 0; }
+
+@keyframes bob { to { translate: 0 6px; } }
+
+/* Reel mode: slightly more room between the parts */
+.reel .dl-count { font-size: 190px; }

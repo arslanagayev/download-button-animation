@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Download button · UI animations</title>
+  <meta name="description" content="A Swiss-style download button: the pill collapses into a progress ring, a giant counter ticks to 100 and a check draws itself.">
+  <meta name="theme-color" content="#eeece6">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
+  <link rel="stylesheet" href="reel/theme.css">
+  <link rel="stylesheet" href="reel/reel.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="demo-page">
+    <section class="dl" data-state="idle" aria-label="Download brand-assets.zip">
+      <button class="dl-btn" type="button">
+        <span class="dl-label">Download</span>
+        <span class="dl-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 4v14M5.5 11.5L12 18l6.5-6.5"/></svg>
+        </span>
+        <svg class="dl-ring" viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="dl-ring-track" cx="60" cy="60" r="54"/>
+          <circle class="dl-ring-bar" cx="60" cy="60" r="54"/>
+        </svg>
+        <svg class="dl-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        <span class="dl-done" aria-hidden="true">Downloaded</span>
+      </button>
+
+      <p class="dl-status">
+        <span class="dl-file">brand-assets.zip · 24.6 MB</span>
+        <span class="dl-saved">Saved to ~/Downloads</span>
+      </p>
+
+      <p class="dl-count" aria-hidden="true"><span class="dl-num">0</span><span class="dl-pct">%</span></p>
+      <div class="dl-line" aria-hidden="true"><span></span></div>
+      <p class="visually-hidden" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <nav class="toolbar" aria-label="Demo links">
+    <a href="https://www.instagram.com/arslanagayev.dev/">More animations</a>
+    <a href="?reel">Reel mode</a>
+    <a href="https://github.com/arslanagayev/download-button-animation">Source</a>
+  </nav>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
